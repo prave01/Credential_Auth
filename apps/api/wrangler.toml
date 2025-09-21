@@ -1,0 +1,10 @@
+name = "colbin-test-api"
+main = "src/index.ts"
+
+## Node js compatibility flags
+compatibility_flags = [ "nodejs_compat" ]
+compatibility_date = "2024-09-23"
+
+## ENVs 
+[vars]
+FIRST_ENV = 'this is the first env ever'
