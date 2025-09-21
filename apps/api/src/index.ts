@@ -8,9 +8,8 @@ type Env = {
 
 const app = new Hono<Env>()
 
-app.get('/', (c) => {
-  console.log(c.env.FIRST_ENV)
-  return c.text('Hello Hono!')
+app.get('/register', (c) => {
+  return c.json({ message: "Fuck" }, 200)
 })
 
 export default app
