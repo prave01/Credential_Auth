@@ -1,8 +1,8 @@
 name = "colbin-test-api"
 main = "src/index.ts"
 
-## Node js compatibility flags
-compatibility_flags = [ "nodejs_compat" ]
+## node js compatibility flags
+compatibility_flags = [ "nodejs_compat", "nodejs_compat_populate_process_env" ]
 compatibility_date = "2024-09-23"
 
 ## ENVs 
@@ -10,5 +10,5 @@ compatibility_date = "2024-09-23"
 BETTER_AUTH_SECRET = "AmQZv2lCd3GpNEZzGX3Bv7iUJpeEwmqz"
 BETTER_AUTH_URL = "http://localhost:8787"
 
-## Neon connection string
-NEON_UR = "postgresql://neondb_owner:npg_F6PJgUuQMxo4@ep-green-moon-admrs56r-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+## neon connection string
+NEON_URI = "postgresql://neondb_owner:npg_F6PJgUuQMxo4@ep-green-moon-admrs56r-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"

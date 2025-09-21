@@ -12,4 +12,5 @@ app.get('/register', (c) => {
   return c.json({ message: "Fuck" }, 200)
 })
 
+
 export default app

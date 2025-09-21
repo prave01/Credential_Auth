@@ -2,7 +2,10 @@
   "name": "api",
   "scripts": {
     "dev": "bunx wrangler dev ./src/index.ts",
-    "bun:dev": "bun run --hot src/index.ts"
+    "bun:dev": "bun run --hot src/index.ts",
+    "db:push": "npx drizzle-kit push",
+    "db:migrate": "npx drizzle-kit generate",
+    "db:generate": "npx drizzle-kit generate"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
