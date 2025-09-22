@@ -15,6 +15,27 @@
       "when": 1758488110938,
       "tag": "0001_sweet_mantis",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758531398152,
+      "tag": "0002_massive_mach_iv",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1758536908567,
+      "tag": "0003_bizarre_bulldozer",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1758542922763,
+      "tag": "0004_yummy_marvex",
+      "breakpoints": true
     }
   ]
 }
