@@ -6,47 +6,34 @@ import { eq } from "drizzle-orm"
 import bcrypt from "bcryptjs";
 
 // Infer from zod
-type CreateUserTypes = z.infer<typeof CreateUserValidate>
+export type CreateUserTypes = z.infer<typeof CreateUserValidate>
 
 export const CustomDrizzleAdapter = {
   createUser: async ({
     email,
     password,
-    firstName,
-    lastName,
-    age
+    userName
   }: CreateUserTypes) => {
     try {
       const data = {
         email,
-        age,
         password,
-        firstName,
-        lastName,
+        userName
       }
 
-      // zod check request input
-      const valid = CreateUserValidate.parse(data)
-
       //password hashing
-      const hashedPassword = await bcrypt.hash(valid.password, 10)
+      const hashedPassword = await bcrypt.hash(password, 10)
 
       // create user in db
       const [user] = await db.insert(authUserTable).values({
-        email: valid.email,
-        firstName: valid.firstName,
-        lastName: valid.lastName,
-        age: valid.age,
-        password: hashedPassword
+        email: email,
+        password: hashedPassword,
+        userName: userName
       }).returning()
 
       return user
     }
     catch (err) {
-      if (err instanceof z.ZodError) {
-        console.error("Validation error:", err.issues);
-        throw new Error("Invalid input");
-      }
       console.error("Database error:", err);
       throw err;
     }

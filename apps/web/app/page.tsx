@@ -1,5 +1,7 @@
 export default function Home() {
   return (
-    <div className="h-min-screen w-full bg-black text-4xl font-semibold"></div>
+    <div className="text-white font-semibold text-xl min-h-screen w-full">
+      Home page
+    </div>
   );
 }
