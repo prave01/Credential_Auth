@@ -48,10 +48,6 @@ app.use("*", initAuthConfig((c) => ({
           label: "Password",
           type: "password"
         },
-        userName: {
-          label: "Username",
-          type: "user"
-        },
       },
       async authorize(credentials) {
 
@@ -104,13 +100,22 @@ app.use("*", initAuthConfig((c) => ({
       }
       return session
     },
-  }
+    redirect() {
+      return ""
+    }
+  },
 })))
 
 
 app.post("/api/auth/signup", async (c) => {
   try {
     const body = await c.req.json()
+
+    // Check user already exists
+    const checkUser = await CustomDrizzleAdapter.checkUserWithEmail(body.email)
+    if (checkUser) {
+      throw new Error("User already exists, Try logging in")
+    }
 
     // zod check request input
     const valid = CreateUserValidate.parse(body)
@@ -129,12 +134,12 @@ app.post("/api/auth/signup", async (c) => {
       }
     }, 200)
 
-  } catch (err) {
+  } catch (err: any) {
     if (err instanceof z.ZodError) {
       console.error("Validation error:", err.issues);
-      throw new Error("Invalid input");
+      return c.json(err.toString(), 400)
     }
-    console.log(err)
+    return c.json(err.toString(), 400)
   }
 
 })

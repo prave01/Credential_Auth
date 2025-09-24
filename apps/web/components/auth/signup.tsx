@@ -15,6 +15,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { SignupFn } from "@/lib/queryFn";
 import { useState } from "react";
+import { PulseLoader, SyncLoader } from "react-spinners";
 
 type Inputs = {
   email: string;
@@ -25,20 +26,13 @@ type Inputs = {
 const SignUpCard = () => {
   const [error, setError] = useState<string | null>(null);
 
-  const {
-    mutate,
-    isPending,
-    data: mutatedData,
-    isError,
-    context,
-  } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: SignupFn,
   });
 
   const { register, handleSubmit } = useForm<Inputs>();
 
   const OnSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
     mutate(
       {
         email: data.email,
@@ -52,7 +46,7 @@ const SignUpCard = () => {
           if (error) setError(String(error[1]).split("+").join(" "));
         },
         onError: (err: any) => {
-          alert(err.toString());
+          setError(String(err.response.data).split(":")[1]);
         },
       },
     );
@@ -76,7 +70,7 @@ const SignUpCard = () => {
           </Link>
         </CardDescription>
       </CardHeader>
-      <hr className="h-[1px] w-[100%] border border-[0.2px] border-zinc-700" />
+      <hr className="h-[1px] w-[100%] border border-zinc-700" />
       <CardContent className="w-full ">
         <form
           onSubmit={handleSubmit(OnSubmit)}
@@ -126,10 +120,15 @@ const SignUpCard = () => {
           <CardAction className="w-[80%] mx-auto">
             {" "}
             <Button
+              disabled={isPending}
               type="submit"
-              className="w-full self-center my-2 text-md cursor-pointer bg-orange-500 h-auto"
+              className="w-full self-center my-2 text-md cursor-pointer bg-orange-500 h-10"
             >
-              Submit
+              {isPending ? (
+                <PulseLoader size={10} color="#e63f3f" className="" />
+              ) : (
+                "Submit"
+              )}
             </Button>
           </CardAction>
         </form>
