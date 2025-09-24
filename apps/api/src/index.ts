@@ -2,14 +2,11 @@ import { Hono } from 'hono'
 import { logger } from 'hono/logger'
 import { authHandler, initAuthConfig, verifyAuth } from '@hono/auth-js'
 import Credentials from '@auth/core/providers/credentials'
-import { CreateUserTypes, CustomDrizzleAdapter } from './libs/custom-adapter'
+import { CustomDrizzleAdapter } from './libs/custom-adapter'
 import { cors } from 'hono/cors'
-import { InvalidCreds, InvalidPassword, UserAlreadyExists, verifyPassword } from './libs/utils'
-import { HTTPException } from 'hono/http-exception'
+import { InvalidCreds, InvalidPassword, UserNotExists, verifyPassword } from './libs/utils'
 import z from "zod"
 import { CreateUserValidate } from './zod/AdapterValidations'
-import { error } from 'better-auth/api'
-import { CallbackRouteError, CredentialsSignin } from '@auth/core/errors'
 
 type Env = {
   Bindings: {
@@ -65,7 +62,7 @@ app.use("*", initAuthConfig((c) => ({
         // Check user already exists
         const checkUser = await CustomDrizzleAdapter.checkUserWithEmail(credentials.email as string)
         if (!checkUser) {
-          throw new UserAlreadyExists()
+          throw new UserNotExists()
         }
 
         if (!(await verifyPassword(credentials.password as string, checkUser.password))) {
@@ -107,14 +104,13 @@ app.use("*", initAuthConfig((c) => ({
       }
       return session
     },
-
   }
 })))
 
 
 app.post("/api/auth/signup", async (c) => {
   try {
-    const body = c.req.json()
+    const body = await c.req.json()
 
     // zod check request input
     const valid = CreateUserValidate.parse(body)

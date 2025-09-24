@@ -14,8 +14,8 @@ class InvalidCreds extends CredentialsSignin {
   code = "Invalid Credentials"
 }
 
-class UserAlreadyExists extends CredentialsSignin {
-  code = "User already exists"
+class UserNotExists extends CredentialsSignin {
+  code = "User not exists"
 }
 
 class InvalidPassword extends CredentialsSignin {
@@ -24,4 +24,4 @@ class InvalidPassword extends CredentialsSignin {
 
 
 
-export { verifyPassword, InvalidCreds, UserAlreadyExists, InvalidPassword }
+export { verifyPassword, InvalidCreds, UserNotExists, InvalidPassword }

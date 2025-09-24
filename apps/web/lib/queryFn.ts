@@ -10,7 +10,7 @@ const SignupFn = async (payload: {
   });
 
   const response = await axios.post(
-    "http://localhost:8787/api/auth/callback/credentials",
+    "http://localhost:8787/api/auth/signup",
     {
       ...payload,
       csrfToken: data.csrfToken,

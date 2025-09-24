@@ -38,6 +38,7 @@ const SignUpCard = () => {
   const { register, handleSubmit } = useForm<Inputs>();
 
   const OnSubmit: SubmitHandler<Inputs> = async (data) => {
+    console.log(data);
     mutate(
       {
         email: data.email,
@@ -75,7 +76,7 @@ const SignUpCard = () => {
           </Link>
         </CardDescription>
       </CardHeader>
-      <hr className="h-[1px] w-[100%] bg-zinc-700" />
+      <hr className="h-[1px] w-[100%] border border-[0.2px] border-zinc-700" />
       <CardContent className="w-full ">
         <form
           onSubmit={handleSubmit(OnSubmit)}
@@ -117,8 +118,10 @@ const SignUpCard = () => {
               className="max-w-[100%] focus:outline-2 text-sm font-medium placeholder:italic text-white pl-4 focus:outline-zinc-500 placeholder:text-zinc-500  w-full bg-zinc-800 border-1 max-h-10 h-10  border-zinc-700 rounded-sm "
             />
           </label>
-          {error && (
-            <div className="w-full text-red-500 text-sm h-auto">{error}</div>
+          {error && error !== "undefined" && (
+            <div className="w-auto text-red-500 mx-auto text-sm h-auto">
+              {error}
+            </div>
           )}{" "}
           <CardAction className="w-[80%] mx-auto">
             {" "}
@@ -131,7 +134,7 @@ const SignUpCard = () => {
           </CardAction>
         </form>
       </CardContent>
-      <hr className="h-[1px] w-[100%] bg-zinc-700" />
+      <hr className="h-[1px] w-[100%] border border-[0.2px] border-zinc-700" />
       <CardFooter>
         <CardDescription className="text-md flex flex-col gap-y-2 items-center text-zinc-500 font-medium">
           <span>

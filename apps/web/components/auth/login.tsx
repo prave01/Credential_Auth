@@ -29,7 +29,7 @@ const LoginCard = () => {
             </Link>
           </CardDescription>
         </CardHeader>
-        <hr className="h-[1px] w-[100%] bg-zinc-700" />
+        <hr className="h-[1px] w-[100%] border border-[0.2px] border-zinc-700" />
         <CardContent className="w-full ">
           <form className="space-y-4 flex items-center flex-col">
             <label
@@ -66,7 +66,7 @@ const LoginCard = () => {
             </CardAction>
           </form>
         </CardContent>
-        <hr className="h-[1px] w-[100%] bg-zinc-700" />
+        <hr className="h-[1px] w-[100%] border border-[0.2px] border-zinc-700" />
         <CardFooter>
           <CardDescription className="text-md flex flex-col gap-y-2 items-center text-zinc-500 font-medium">
             <span>
