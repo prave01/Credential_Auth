@@ -17,6 +17,7 @@ import { SigninFn } from "@/lib/queryFn";
 import { PulseLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type Inputs = {
   email: string;
@@ -47,6 +48,7 @@ const LoginCard = () => {
                 return setError(String(error[1]).split("+").join(" "));
               }
             }
+            toast.success("Logged in successfully");
             router.push("/");
           }
         },

@@ -65,4 +65,13 @@ const SigninFn = async (payload: { email: string; password: string }) => {
   return response;
 };
 
-export { SignupFn, SigninFn };
+// Get user session
+const GetUserSession = async () => {
+  const response = await axios.get("http://localhost:8787/api/protected", {
+    withCredentials: true,
+  });
+
+  return response;
+};
+
+export { SignupFn, SigninFn, GetUserSession };

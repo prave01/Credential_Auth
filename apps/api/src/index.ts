@@ -74,10 +74,10 @@ app.use("*", initAuthConfig((c) => ({
   ],
   session: {
     strategy: "jwt",
-    maxAge: 60
+    maxAge: 5 * 60 * 60
   },
   jwt: {
-    maxAge: 2 * 60,
+    maxAge: 5 * 60 * 60,
   },
   callbacks: {
     async signIn({ user }) {

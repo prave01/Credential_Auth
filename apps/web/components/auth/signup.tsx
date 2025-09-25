@@ -14,8 +14,10 @@ import { Button } from "../ui/button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { SignupFn } from "@/lib/queryFn";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { PulseLoader, SyncLoader } from "react-spinners";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type Inputs = {
   email: string;
@@ -23,8 +25,14 @@ type Inputs = {
   userName: string;
 };
 
-const SignUpCard = () => {
+const SignUpCard = ({
+  onSignupSuccess,
+}: {
+  onSignupSuccess: React.Dispatch<React.SetStateAction<"signup" | "login">>;
+}) => {
   const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
 
   const { mutate, isPending } = useMutation({
     mutationFn: SignupFn,
@@ -41,9 +49,17 @@ const SignUpCard = () => {
       },
       {
         onSuccess: (res) => {
-          const errorUrl = res.request.responseURL;
-          const error = String(errorUrl).toString().split("code=") || null;
-          if (error) setError(String(error[1]).split("+").join(" "));
+          if (res.request.responseURL !== undefined) {
+            const errorUrl = res.request.responseURL;
+            if (String(errorUrl).includes("code")) {
+              const error = String(errorUrl).toString().split("code=") || null;
+              if (error !== undefined || error !== null) {
+                return setError(String(error[1]).split("+").join(" "));
+              }
+            }
+            onSignupSuccess("login");
+            toast.success("Account created successfully");
+          }
         },
         onError: (err: any) => {
           setError(String(err.response.data).split(":")[1]);
