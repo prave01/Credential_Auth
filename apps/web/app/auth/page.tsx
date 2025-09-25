@@ -3,7 +3,7 @@
 import LoginCard from "@/components/auth/login";
 import SignUpCard from "@/components/auth/signup";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -23,7 +23,7 @@ export default function SignIn() {
           <motion.div
             onClick={() => setWhichDiv("signup")}
             className={cn(
-              "px-3 py-2 relative text-orange-500 font-semibold rounded",
+              "px-3 py-2 relative cursor-pointer text-orange-500 font-semibold rounded",
             )}
           >
             <span className="relative z-10">Signup</span>
@@ -42,7 +42,7 @@ export default function SignIn() {
           <motion.div
             onClick={() => setWhichDiv("login")}
             className={cn(
-              "px-3 py-2 relative  text-orange-500 font-semibold rounded",
+              "px-3 py-2 relative cursor-pointer  text-orange-500 font-semibold rounded",
             )}
           >
             <span className="relative z-10">Login</span>

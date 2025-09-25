@@ -7,6 +7,9 @@ import { cors } from 'hono/cors'
 import { InvalidCreds, InvalidPassword, UserNotExists, verifyPassword } from './libs/utils'
 import z from "zod"
 import { CreateUserValidate } from './zod/AdapterValidations'
+import * as jwt from "@auth/core/jwt";
+import { getCookie, setCookie } from 'hono/cookie'
+import { refreshToken } from 'better-auth/api'
 
 type Env = {
   Bindings: {
@@ -74,7 +77,8 @@ app.use("*", initAuthConfig((c) => ({
   ],
   session: {
     strategy: "jwt",
-    maxAge: 5 * 60 * 60
+    maxAge: 30,
+    updateAge: 20
   },
   jwt: {
     maxAge: 5 * 60 * 60,
@@ -86,14 +90,25 @@ app.use("*", initAuthConfig((c) => ({
       }
       return true
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
-        token.name = user.name;
         token.email = user.email;
+        token.name = user.name;
+        console.log("erere", account?.refresh_token)
+
+
+        // // generate refresh token
+        // const refreshToken = await jwt.encode({
+        //   secret: c.env.AUTH_SECRET,
+        //   salt: "refresh",
+        //   token: { email: user.email, name: user.name },
+        //   maxAge: 60 * 60 * 24 * 7,
+        // });
+        //
+
       }
-      return token;
-    },
-    async session({ token, session }) {
+      return token; // return token normally
+    }, async session({ token, session }) {
       if (token?.name) {
         session.user.email = token?.email!
         session.user.name = token?.name!
@@ -105,6 +120,46 @@ app.use("*", initAuthConfig((c) => ({
     }
   },
 })))
+
+app.post("/api/auth/refresh", async (c) => {
+
+  // sends new access token to the client
+  try {
+    const refreshToken = getCookie(c, "refresh-token")
+
+    console.log("asdfas", refreshToken)
+
+    if (!refreshToken) {
+      throw new Error("No refresh token founded")
+    }
+
+    // verify refreshToken
+    const verify = await jwt.decode({
+      salt: "refresh",
+      secret: c.env.AUTH_SECRET,
+      token: refreshToken
+    })
+
+    if (!verify) {
+      throw new Error("Invalid refresh token")
+    }
+
+    //create new accessToken
+    const newAccessToken = await jwt.encode({
+      secret: c.env.AUTH_SECRET,
+      salt: "authjs.session-token",
+      token: {
+        email: verify.email,
+        name: verify.name
+      },
+      maxAge: 5 * 60 * 60,
+    })
+
+    return c.json({ newAccessToken }, 200)
+  } catch (err: any) {
+    return c.json(err, 400)
+  }
+});
 
 
 app.post("/api/auth/signup", async (c) => {
@@ -141,7 +196,6 @@ app.post("/api/auth/signup", async (c) => {
     }
     return c.json(err.toString(), 400)
   }
-
 })
 
 app.use("/api/auth/*", authHandler())

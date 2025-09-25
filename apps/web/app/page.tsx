@@ -2,12 +2,13 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { GetUserSession } from "@/lib/queryFn";
+import { GetUserSession, SignoutFn } from "@/lib/queryFn";
 import { BeatLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useAxios } from "./hooks/useAxios";
 
 export default function Home() {
   const [user, setUser] = useState<{
@@ -16,6 +17,8 @@ export default function Home() {
   } | null>(null);
 
   const router = useRouter();
+
+  const api = useAxios();
 
   const {
     isError,
@@ -28,22 +31,20 @@ export default function Home() {
   });
 
   useEffect(() => {
-    if (isError) {
-      if ((error as any)?.status) {
-        toast.error("Unauthorized, Please login");
-        router.push("/auth?target=login");
-        return;
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/protected");
+        setUser({
+          name: response.data?.session?.user?.name,
+          email: response.data?.session?.user?.email,
+        });
+      } catch (err: any) {
+        console.log(err.message);
+        toast.error("Unauthorized, please login");
       }
-      alert(`Error\n ${error.message}`);
-    }
-    if (response) {
-      setUser({
-        name: response.data.session.user.name,
-        email: response.data.session.user.email,
-      });
-      console.log(response.data.session.user);
-    }
-  }, [isError, error, router, response]);
+    };
+    fetchData();
+  }, [api]);
 
   return (
     <div className="bg-neutral-900 h-screen w-full">
@@ -52,12 +53,20 @@ export default function Home() {
           <BeatLoader color="#ff0000" />
         ) : (
           <>
-            <Button></Button>
-            <div className="size-22 rounded-full relative flex items-center justify-center text-5xl font-bold p-1 bg-pink-300 text-black border-zinc-700 border-1">
+            <Button
+              onClick={() => {
+                SignoutFn();
+                window.location.reload();
+              }}
+              className="text-white hover:bg-orange-500 cursor-pointer hover:text-black font-semibold absolute border-zinc-700 border-1 text-lg top-2 right-2"
+            >
+              Sign out
+            </Button>
+            <div className="size-22 rounded-full relative flex items-center justify-center text-5xl font-bold p-1 bg-pink-300 text-black border-zinc-700 border-5">
               {user?.name && user.name.split("")[0].toUpperCase()}
             </div>
-            <Card className="py-3 border-zinc-700 bg-transparent border-1 w-fit">
-              <CardContent className="flex items-start flex-col gap-y-2">
+            <Card className=" border-zinc-700 bg-black border-1 w-fit">
+              <CardContent className="flex items-start flex-col gap-y-4">
                 <div className="flex gap-x-2 items-center text-lg font-semibold justify-center">
                   <div className="border-1 max-w-40 w-full text-orange-500  px-4 border-zinc-700 bg-zinc-800 rounded-md">
                     User

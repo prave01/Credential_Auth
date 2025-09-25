@@ -14,9 +14,8 @@ import { Button } from "../ui/button";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { SignupFn } from "@/lib/queryFn";
-import { ReactNode, useState } from "react";
-import { PulseLoader, SyncLoader } from "react-spinners";
-import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useState } from "react";
+import { PulseLoader } from "react-spinners";
 import { toast } from "sonner";
 
 type Inputs = {
@@ -25,14 +24,16 @@ type Inputs = {
   userName: string;
 };
 
-const SignUpCard = ({
+type SignUpCardProps = {
+  onSignupSuccess: React.Dispatch<React.SetStateAction<"signup" | "login">>;
+};
+
+export function SignUpCard({
   onSignupSuccess,
 }: {
-  onSignupSuccess: React.Dispatch<React.SetStateAction<"signup" | "login">>;
-}) => {
+  onSignupSuccess: Dispatch<SetStateAction<string>>;
+}) {
   const [error, setError] = useState<string | null>(null);
-
-  const router = useRouter();
 
   const { mutate, isPending } = useMutation({
     mutationFn: SignupFn,
@@ -149,7 +150,7 @@ const SignUpCard = ({
           </CardAction>
         </form>
       </CardContent>
-      <hr className="h-[1px] w-[100%] border border-[0.2px] border-zinc-700" />
+      <hr className="h-[1px] w-[100%] border  border-zinc-700" />
       <CardFooter>
         <CardDescription className="text-md flex flex-col gap-y-2 items-center text-zinc-500 font-medium">
           <span>
@@ -176,6 +177,6 @@ const SignUpCard = ({
       </CardFooter>
     </Card>
   );
-};
+}
 
 export default SignUpCard;

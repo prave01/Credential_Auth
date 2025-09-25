@@ -1,5 +1,6 @@
+import { useAxios } from "@/app/hooks/useAxios";
 import axios from "axios";
-import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 const API_BASE = "http://localhost:8787/api/auth";
 
@@ -65,13 +66,32 @@ const SigninFn = async (payload: { email: string; password: string }) => {
   return response;
 };
 
-// Get user session
-const GetUserSession = async () => {
-  const response = await axios.get("http://localhost:8787/api/protected", {
-    withCredentials: true,
-  });
+// Signout
+const SignoutFn = async () => {
+  const data = await getCsrfToken();
+
+  const response = await axios.post(
+    `${API_BASE}/signout`,
+    {
+      csrfToken: data,
+    },
+    {
+      withCredentials: true,
+    },
+  );
 
   return response;
 };
 
-export { SignupFn, SigninFn, GetUserSession };
+// Get user session
+const GetUserSession = async () => {
+  const api = useAxios();
+
+  const response = await api("/protected");
+
+  (await cookies()).set("refresh-token", "great", { httpOnly: true });
+
+  return response;
+};
+
+export { SignupFn, SigninFn, GetUserSession, SignoutFn };
