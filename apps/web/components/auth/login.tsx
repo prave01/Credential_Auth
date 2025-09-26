@@ -16,7 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import { SigninFn } from "@/lib/queryFn";
 import { PulseLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 type Inputs = {
@@ -31,34 +31,46 @@ const LoginCard = () => {
 
   const { register, handleSubmit } = useForm<Inputs>();
 
-  const { mutate, isPending } = useMutation({
+  const {
+    mutate,
+    isPending,
+    isError,
+    error: qrError,
+  } = useMutation({
     mutationFn: SigninFn,
   });
 
   const OnSubmit: SubmitHandler<Inputs> = (data) => {
     mutate(
-      { email: data.email, password: data.password },
+      {
+        email: data.email,
+        password: data.password,
+      },
       {
         onSuccess: (res) => {
-          if (res.request.responseURL !== undefined) {
-            const errorUrl = res.request.responseURL;
-            if (String(errorUrl).includes("code")) {
-              const error = String(errorUrl).toString().split("code=") || null;
-              if (error !== undefined || error !== null) {
-                return setError(String(error[1]).split("+").join(" "));
-              }
-            }
-            toast.success("Logged in successfully");
-            router.push("/");
-          }
-        },
-        onError: (err) => {
-          console.error(err);
-          alert(err);
+          // if (res?.request?.responseURL !== undefined) {
+          //   const errorUrl = res.request.responseURL;
+          //   if (String(errorUrl).includes("code")) {
+          //     const error = String(errorUrl).toString().split("code=") || null;
+          //     if (error !== undefined || error !== null) {
+          //       return setError(String(error[1]).split("+").join(" "));
+          //     }
+          //   }
+          // }
+          console.log(res);
+          router.push("/");
+          toast.success("Login successfull");
         },
       },
     );
   };
+
+  useEffect(() => {
+    if (isError) {
+      console.log("Login error:", qrError);
+      toast.error(qrError?.message ?? "Something went wrong");
+    }
+  }, [isError, qrError]);
 
   return (
     <div>

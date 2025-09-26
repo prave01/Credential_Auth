@@ -8,8 +8,7 @@ import { InvalidCreds, InvalidPassword, UserNotExists, verifyPassword } from './
 import z from "zod"
 import { CreateUserValidate } from './zod/AdapterValidations'
 import * as jwt from "@auth/core/jwt";
-import { getCookie, setCookie } from 'hono/cookie'
-import { refreshToken } from 'better-auth/api'
+import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 
 type Env = {
   Bindings: {
@@ -22,7 +21,7 @@ const app = new Hono<Env>()
 app.use(
   '*',
   cors({
-    origin: ["http://localhost:3000"],
+    origin: "http://localhost:3000",
     allowHeaders: [
       'Content-Type',
       'Authorization',
@@ -78,7 +77,6 @@ app.use("*", initAuthConfig((c) => ({
   session: {
     strategy: "jwt",
     maxAge: 30,
-    updateAge: 20
   },
   jwt: {
     maxAge: 5 * 60 * 60,
@@ -90,24 +88,12 @@ app.use("*", initAuthConfig((c) => ({
       }
       return true
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
         token.email = user.email;
         token.name = user.name;
-        console.log("erere", account?.refresh_token)
-
-
-        // // generate refresh token
-        // const refreshToken = await jwt.encode({
-        //   secret: c.env.AUTH_SECRET,
-        //   salt: "refresh",
-        //   token: { email: user.email, name: user.name },
-        //   maxAge: 60 * 60 * 24 * 7,
-        // });
-        //
-
       }
-      return token; // return token normally
+      return token;
     }, async session({ token, session }) {
       if (token?.name) {
         session.user.email = token?.email!
@@ -121,13 +107,38 @@ app.use("*", initAuthConfig((c) => ({
   },
 })))
 
+app.get("/api/auth/generate-refreshtoken", verifyAuth(), async (c) => {
+  try {
+    const sessionData = c.get("authUser").session.user
+
+    // generate refresh token
+    const refreshToken = await jwt.encode({
+      secret: c.env.AUTH_SECRET,
+      salt: "refresh",
+      token: {
+        email: sessionData?.email,
+        name: sessionData?.name
+      },
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    setCookie(c, "authjs.refresh-token", refreshToken, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: false
+    })
+
+    return c.json("Refresh token generated successfully", 200)
+  } catch (err: any) {
+    return c.json({ error: err.toString() }, 200)
+  }
+})
+
 app.post("/api/auth/refresh", async (c) => {
 
   // sends new access token to the client
   try {
-    const refreshToken = getCookie(c, "refresh-token")
-
-    console.log("asdfas", refreshToken)
+    const refreshToken = getCookie(c, "authjs.refresh-token")
 
     if (!refreshToken) {
       throw new Error("No refresh token founded")
@@ -139,6 +150,8 @@ app.post("/api/auth/refresh", async (c) => {
       secret: c.env.AUTH_SECRET,
       token: refreshToken
     })
+
+
 
     if (!verify) {
       throw new Error("Invalid refresh token")
@@ -153,6 +166,12 @@ app.post("/api/auth/refresh", async (c) => {
         name: verify.name
       },
       maxAge: 5 * 60 * 60,
+    })
+
+    setCookie(c, "authjs.session-token", newAccessToken, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: false,
     })
 
     return c.json({ newAccessToken }, 200)
@@ -195,6 +214,23 @@ app.post("/api/auth/signup", async (c) => {
       return c.json(err.toString(), 400)
     }
     return c.json(err.toString(), 400)
+  }
+})
+
+app.post("/api/auth/signout", async (c) => {
+  try {
+    const { csrfToken } = await c.req.json()
+
+    if (!csrfToken) {
+      throw new Error("Missing csrfToken")
+    }
+
+    deleteCookie(c, "authjs.session-token")
+    deleteCookie(c, "authjs.refresh-token")
+
+    return c.json("Signout successfull", 200)
+  } catch (err) {
+    return c.json(`Error ${err}`, 400)
   }
 })
 

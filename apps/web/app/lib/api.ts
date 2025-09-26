@@ -10,18 +10,28 @@ export const attachInterceptor = (router: ReturnType<typeof useRouter>) => {
   api.interceptors.response.use(
     (res) => res,
     async (error) => {
-      if (error.response.status === 401) {
+      const originalRequest = error.config;
+
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true; // mark as retried
+
         try {
+          // Call refresh endpoint
           await axios.post(
             "http://localhost:8787/api/auth/refresh",
             {},
             { withCredentials: true },
           );
-          return api(error?.config);
-        } catch {
+
+          // Retry original request
+          return api(originalRequest);
+        } catch (err) {
+          console.log("No refresh token found");
           router.push("/auth?target=login");
+          return Promise.reject(err);
         }
       }
+
       return Promise.reject(error);
     },
   );
