@@ -74,9 +74,9 @@ const LoginCard = () => {
 
   return (
     <div>
-      <Card className="sm:bg-neutral-800 rounded-md relative bg-transparent flex flex-col gap-y-4 items-center justify-center border-none">
+      <Card className="relative flex flex-col items-center justify-center gap-y-4 rounded-md border-none bg-transparent sm:bg-neutral-800">
         <CardHeader className="w-full space-y-2">
-          <CardTitle className="text-xl text-white underline underline-offset-8 font-semibold">
+          <CardTitle className="text-xl font-semibold text-white underline underline-offset-8">
             Login With Credentials
           </CardTitle>
           <CardDescription className="text-lg font-medium text-neutral-500">
@@ -84,21 +84,21 @@ const LoginCard = () => {
             <Link
               target="__blank"
               href="https://www.authjs.dev"
-              className="bg-gradient-to-r font-semibold from-purple-500 to-pink-500 bg-clip-text text-transparent"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text font-semibold text-transparent"
             >
               Auth.js
             </Link>
           </CardDescription>
         </CardHeader>
-        <hr className="h-[1px] w-[100%] border  border-zinc-700" />
-        <CardContent className="w-full ">
+        <hr className="h-[1px] w-[100%] border border-zinc-700" />
+        <CardContent className="w-full">
           <form
             onSubmit={handleSubmit(OnSubmit)}
-            className="space-y-4 flex items-center flex-col"
+            className="flex flex-col items-center space-y-4"
           >
             <label
               htmlFor={"email"}
-              className="flex gap-y-2 text-orange-500 w-full font-semibold text-lg flex-col"
+              className="flex w-full flex-col gap-y-2 text-lg font-semibold text-orange-500"
             >
               {" "}
               Email
@@ -107,10 +107,10 @@ const LoginCard = () => {
                 id="email"
                 type="email"
                 placeholder="eg -- jhon.doe@xyz.com"
-                className="max-w-[100%] focus:outline-2 text-sm font-medium placeholder:italic text-white pl-4 focus:outline-zinc-500 placeholder:text-zinc-500  w-full bg-zinc-800 border-1 max-h-10 h-10  border-zinc-700 rounded-sm "
+                className="h-10 max-h-10 w-full max-w-[100%] rounded-sm border-1 border-zinc-700 bg-zinc-800 pl-4 text-sm font-medium text-white placeholder:text-zinc-500 placeholder:italic focus:outline-2 focus:outline-zinc-500"
               />
             </label>
-            <label className="flex gap-y-2 text-orange-500 w-full font-semibold text-lg flex-col">
+            <label className="flex w-full flex-col gap-y-2 text-lg font-semibold text-orange-500">
               {" "}
               Password
               <input
@@ -118,20 +118,20 @@ const LoginCard = () => {
                 id="password"
                 type="password"
                 placeholder="******"
-                className="max-w-[100%] focus:outline-2 text-sm font-medium placeholder:italic text-white pl-4 focus:outline-zinc-500 placeholder:text-zinc-500  w-full bg-zinc-800 border-1 max-h-10 h-10  border-zinc-700 rounded-sm "
+                className="h-10 max-h-10 w-full max-w-[100%] rounded-sm border-1 border-zinc-700 bg-zinc-800 pl-4 text-sm font-medium text-white placeholder:text-zinc-500 placeholder:italic focus:outline-2 focus:outline-zinc-500"
               />
             </label>
             {error && error !== "undefined" && (
-              <div className="w-auto text-red-500 mx-auto text-sm h-auto">
+              <div className="mx-auto h-auto w-auto text-sm text-red-500">
                 {error}
               </div>
             )}
-            <CardAction className="w-[80%] mx-auto">
+            <CardAction className="mx-auto w-[80%]">
               {" "}
               <Button
                 disabled={isPending}
                 type="submit"
-                className="w-full self-center my-2 text-md cursor-pointer bg-orange-500 h-10"
+                className="text-md my-2 h-10 w-full cursor-pointer self-center bg-orange-500"
               >
                 {isPending ? (
                   <PulseLoader size={10} color="#e63f3f" className="" />
@@ -144,12 +144,12 @@ const LoginCard = () => {
         </CardContent>
         <hr className="h-[1px] w-[100%] border border-zinc-700" />
         <CardFooter>
-          <CardDescription className="text-md flex flex-col gap-y-2 items-center text-zinc-500 font-medium">
+          <CardDescription className="text-md flex flex-col items-center gap-y-2 font-medium text-zinc-500">
             <span>
               Checkout{" "}
               <Link
                 href={"https://thepraveen.vercel.app"}
-                className="text-orange-500 hover:text-neutral-200 font-semibold"
+                className="font-semibold text-orange-500 hover:text-neutral-200"
                 target="_blank"
               >
                 Praveen's portfolio
@@ -159,7 +159,7 @@ const LoginCard = () => {
               Made with ❤️ By{" "}
               <Link
                 href={"https://x.com/drunkidev"}
-                className="italic hover:text-neutral-200 text-orange-500 font-semibold"
+                className="font-semibold text-orange-500 italic hover:text-neutral-200"
                 target="_blank"
               >
                 _Praveen_

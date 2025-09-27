@@ -42,8 +42,8 @@ export default function Home() {
   }, [response, isError, error]);
 
   return (
-    <div className="bg-neutral-900 h-screen w-full">
-      <div className="max-w-xl flex-col gap-y-4 flex items-center mx-auto justify-center h-full">
+    <div className="h-screen w-full bg-neutral-900">
+      <div className="mx-auto flex h-full max-w-xl flex-col items-center justify-center gap-y-4">
         {isPending || isError ? (
           <BeatLoader color="#ff0000" />
         ) : (
@@ -53,23 +53,23 @@ export default function Home() {
                 SignoutFn();
                 window.location.reload();
               }}
-              className="text-white hover:bg-orange-500 cursor-pointer hover:text-black font-semibold absolute border-zinc-700 border-1 text-lg top-2 right-2"
+              className="absolute top-2 right-2 cursor-pointer border-1 border-zinc-700 text-lg font-semibold text-white hover:bg-orange-500 hover:text-black"
             >
               Sign out
             </Button>
-            <div className="size-22 rounded-full relative flex items-center justify-center text-5xl font-bold p-1 bg-pink-300 text-black border-zinc-700 border-5">
+            <div className="relative flex size-22 items-center justify-center rounded-full border-5 border-zinc-700 bg-pink-300 p-1 text-5xl font-bold text-black">
               {user?.name && user.name.split("")[0].toUpperCase()}
             </div>
-            <Card className=" border-zinc-700  bg-black border-1 w-fit">
-              <CardContent className="flex items-start flex-col gap-y-4">
-                <div className="flex gap-x-2 items-center text-lg font-semibold justify-center">
-                  <div className="border-1 max-w-40 w-full text-orange-500  px-4 border-zinc-700 bg-zinc-800 rounded-md">
+            <Card className="w-fit border-1 border-zinc-700 bg-black">
+              <CardContent className="flex flex-col items-start gap-y-4">
+                <div className="flex items-center justify-center gap-x-2 text-lg font-semibold">
+                  <div className="w-full max-w-40 rounded-md border-1 border-zinc-700 bg-zinc-800 px-4 text-orange-500">
                     User
                   </div>
                   <span className="text-amber-50">{user?.name}</span>
                 </div>
-                <div className="flex gap-x-2 items-center text-lg font-semibold justify-center">
-                  <div className="border-1 text-orange-500  max-w-40 w-full px-3 border-zinc-700 bg-zinc-800 rounded-md">
+                <div className="flex items-center justify-center gap-x-2 text-lg font-semibold">
+                  <div className="w-full max-w-40 rounded-md border-1 border-zinc-700 bg-zinc-800 px-3 text-orange-500">
                     Email
                   </div>
                   <span className="text-amber-50">{user?.email}</span>

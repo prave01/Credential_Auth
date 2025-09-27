@@ -17,13 +17,13 @@ export default function SignIn() {
   );
 
   return (
-    <div className=" min-h-screen mx-auto flex flex-col gap-y-10 items-center justify-center max-w-2xl w-full">
-      <div className="w-auto rounded-md px-3 py-2 bg-black flex items-center justify-center gap-x-4 h-10">
+    <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center justify-center gap-y-10">
+      <div className="flex h-10 w-auto items-center justify-center gap-x-4 rounded-md bg-black px-3 py-2">
         <motion.div className="flex gap-2">
           <motion.div
             onClick={() => setWhichDiv("signup")}
             className={cn(
-              "px-3 py-2 relative cursor-pointer text-orange-500 font-semibold rounded",
+              "relative cursor-pointer rounded px-3 py-2 font-semibold text-orange-500",
             )}
           >
             <span className="relative z-10">Signup</span>
@@ -32,7 +32,7 @@ export default function SignIn() {
               <motion.div
                 layoutId="change"
                 className={cn(
-                  "absolute w-full h-full inset-0",
+                  "absolute inset-0 h-full w-full",
                   "bg-neutral-800",
                 )}
               ></motion.div>
@@ -42,7 +42,7 @@ export default function SignIn() {
           <motion.div
             onClick={() => setWhichDiv("login")}
             className={cn(
-              "px-3 py-2 relative cursor-pointer  text-orange-500 font-semibold rounded",
+              "relative cursor-pointer rounded px-3 py-2 font-semibold text-orange-500",
             )}
           >
             <span className="relative z-10">Login</span>
@@ -50,7 +50,7 @@ export default function SignIn() {
               <motion.div
                 layoutId="change"
                 className={cn(
-                  "absolute w-full h-full inset-0 ",
+                  "absolute inset-0 h-full w-full",
                   "bg-neutral-800",
                 )}
               ></motion.div>
@@ -59,7 +59,7 @@ export default function SignIn() {
         </motion.div>
       </div>
 
-      <div className="max-w-lg min-h-[680px] w-full h-full">
+      <div className="h-full min-h-[680px] w-full max-w-lg">
         {whichDiv === "signup" ? (
           <SignUpCard onSignupSuccess={setWhichDiv} />
         ) : (
